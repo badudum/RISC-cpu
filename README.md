@@ -19,3 +19,7 @@ The datapath contains various functionalities, starting from the ALU(arithmetic 
   | 01     | subtraction      | val_A - val_b |
   | 10     | bitwise AND      | val_A & val_b |
   | 11     | bitwise negation |    ~val_B     |
+
+### Shifter
+  The shifter unit is similar to the ALU, but it only aims to shift certain bits of val_B
+  
