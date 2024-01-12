@@ -3,6 +3,8 @@ This is a reduced instruction set CPU which aims to let us understand and master
 
 # Overall Diagram
 ![cpu diagram upload](/images/cpu_diagram.png)
+
+
 The above diagram shows the general layout of the cpu design. There are several components, which are described below.
 
 ## Datapath
