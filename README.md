@@ -1,4 +1,5 @@
-# RISC CPU
+# RISC CPU 
 This is a reduced instruction set CPU which aims to let us understand and master the ins and outs of a rudimentary CPU. 
 
-#Funcitonalities
+# Overall Diagram
+
