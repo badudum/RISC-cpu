@@ -12,9 +12,22 @@ module datapath(input logic clk, input logic [15:0] mdata, input logic [7:0] pc,
     assign datapath_out = C;
     assign w_data = wb_sel[1] ? (wb_sel[0] ? mdata : sximm8) : (wb_sel[0] ? {8'b0, pc} : datapath_out);
     
-    regfile register(.clk(clk), .w_data(w_data), .w_addr(w_addr), .w_en(w_en), .r_addr(r_addr), .r_data(r_data));
-    ALU alu(.val_A(val_A), .val_B(val_B), .ALU_out(ALU_out), .Z(Z), .N(N), .V(V));
-    shifter shifter(.shift_in(B), .shift_op(shift_op), .shift_out(shift_B));
+    regfile register(.clk(clk), 
+                     .w_data(w_data), 
+                     .w_addr(w_addr), 
+                     .w_en(w_en), 
+                     .r_addr(r_addr), 
+                     .r_data(r_data));
+    ALU alu(.val_A(val_A), 
+            .val_B(val_B), 
+            .ALU_out(ALU_out), 
+            .Z(Z), 
+            .N(N), 
+            .V(V));
+    shifter shifter(.shift_in(B), 
+                    .shift_op(shift_op), 
+                    .shift_out(shift_B));
+
 
     always_ff @(posedge clk) begin
         if (en_A) begin
@@ -42,4 +55,4 @@ module datapath(input logic clk, input logic [15:0] mdata, input logic [7:0] pc,
         end
     end
 
-endmodule: datapath;
+endmodule: datapath
