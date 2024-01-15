@@ -161,6 +161,36 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           sel_addr <= 1'b0; load_addr <= 1'b0;
         end
+
+        //STR
+        //Since we need the value of register rd to put it into the memeory using
+        //the value of Rn + im5, we can just store the rd value into register b,
+        //and rn to register A, and then we can just switch using the mux to get imm5.
+        //The cycles are ,
+        //1. Store the value of rd into register B 
+        //2. Store the value of rn into register A
+        //3. Store the value of memory address to register C (rn + im5)
+        //4. Store the value of memory address to memory register
+        //5. Store the value in B into C
+        //6. Store the value in C into memory address
+    
+        `STORERD_TO_B : begin
+        end
+
+        `STORERN_TO_A :begin
+        end
+
+        `STORRE_MEMADRR_C : begin
+        end 
+        
+        `STORE_C_TO_MEMREG : begin
+        end
+        
+        `STORE_B_TO_C : begin
+        end
+
+        `STORE_B_TO_MEM : begin
+        end
         
         default : begin
           reg_sel <= `Rd; wb_sel <= 2'b00; sel_A <= 1'b0; sel_B <= 1'b1;
