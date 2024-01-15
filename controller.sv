@@ -4,7 +4,7 @@ module controller(input logic clk, input logic rst_n,
                   output logic [1:0] reg_sel, output logic [1:0] wb_sel, output logic w_en,
                   output logic en_A, output logic en_B, output logic en_C, output logic en_status,
                   output logic sel_A, output logic sel_B, output logic load_pc, output logic choose_pc,
-                  output logic load_ir);
+                  output logic load_ir, output logic pc_sel, output logic sel_addr, output logic load_addr);
   // your implementation here
   logic [7:0] state;
   `define START 8'b001_00000;
@@ -34,7 +34,7 @@ module controller(input logic clk, input logic rst_n,
     if(!rst_n) begin
       reg_sel <= 2'b11; wb_sel <= 2'b00; sel_A <= 1'b0; sel_B <= 1'b1;
       w_en <= 1'b0; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0;
-      load_pc <= 1'b0; load_ir <= 1'b1;
+      load_pc <= 1'b0; load_ir <= 1'b1; pc_sel <= 1'b1; pc_sel <= 1'b0;
     end
     else begin
       case(state)    
@@ -117,6 +117,17 @@ module controller(input logic clk, input logic rst_n,
           w_en <= 1'b0; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b1;
           load_pc <= 1'b0; load_ir <= 1'b0;
         end
+
+
+        //LDR
+
+        `LOADRN : begin
+          reg_sel <= `Rn; wb_sel <= 2'b10; sel_A <= 1'b0; sel_B <= 1'b1;
+          w_en <= 1'b0; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0;
+          load_pc <= 1'b0;
+          load_ir <= 1'b0;
+        end
+        
 
         default : begin
           reg_sel <= 2'b11; wb_sel <= 2'b00; sel_A <= 1'b0; sel_B <= 1'b1;

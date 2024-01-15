@@ -1,5 +1,5 @@
 module cpu(input clk, input rst_n, input [7:0] start_pc, output[15:0] out);
-  logic [7:0] pc, next_pc;
+  logic [7:0] pc, next_pc. data_arr_reg;
   logic [15:0] ir, ram_r_data, ram_w_data;
   
   ram ram(.clk(clk), 
@@ -29,7 +29,10 @@ module cpu(input clk, input rst_n, input [7:0] start_pc, output[15:0] out);
                         .sel_B(),
                         .load_pc(load_pc),
                         .clear_pc(clear_pc),
-                        .load_ir(load_ir));
+                        .load_ir(load_ir),
+                        .pc_sel(pc_sel),
+                        .sel_addr(sel_addr),
+                        .load_addr(load_addr));
 
   idecoder instructiondecoder(.ir(),
                               .reg_sel(),
@@ -63,7 +66,12 @@ module cpu(input clk, input rst_n, input [7:0] start_pc, output[15:0] out);
                     .N_out(),
                     .V_out());
 
-  assign next_pc = clear_pc ? start_pc : pc + 1;
+  assign next_pc = clear_pc ? start_pc : pc_sel ? pc + datapath_out[7:0] : pc + 1; //this will select the next program counter
+  // if pc_sel is 1, just add one, and if pc_sel == 0 then use the datpath's output
+  
+  assign ram_r_addr = sel_addr ? pc : data_arr_reg;
+  assign ram_w_addr = ram_r_addr;
+  assign out = datapath_out;
 
   always_ff @(posedge clk) begin
     if (load_pc) begin
@@ -77,7 +85,14 @@ module cpu(input clk, input rst_n, input [7:0] start_pc, output[15:0] out);
       ir <= ram_r_data;
     end
     else begin
-      ir <= ir;
+      ir <= i;
+    end
+
+    if(load_addr) begin
+      data_arr_reg <= datapath_out[7:0];
+    end
+    else begin
+      data_arr_reg <= data_arr_reg;
     end
   end
 endmodule: cpu
