@@ -10,7 +10,7 @@ module datapath(input logic clk, input logic [15:0] mdata, input logic [7:0] pc,
     assign val_A = sel_A ? A : 16'b0;
     assign val_B = sel_B ? sximm5 : shift_B;
     assign datapath_out = C;
-    assign w_data = wb_sel[1] ? (wb_sel[0] ? mdata : sximm8) : (wb_sel[0] ? {8'b0, pc} : datapath_out);
+    assign w_data = wb_sel[1] ? (wb_sel[0] ? mdata : sximm8) : (wb_sel[0] ? {8'b0, pc} + 1 : datapath_out);
     
     regfile register(.clk(clk), 
                      .w_data(w_data), 

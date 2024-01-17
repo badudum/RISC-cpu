@@ -66,7 +66,7 @@ module cpu(input clk, input rst_n, input [7:0] start_pc, output[15:0] out);
                     .N_out(),
                     .V_out());
 
-  assign next_pc = clear_pc ? start_pc : pc_sel ? pc + datapath_out[7:0] : pc + 1; //this will select the next program counter
+  assign next_pc = clear_pc ? start_pc : pc_sel ? branch_sel ? pc + datapath_out[7:0] + 1  : pc + sximm8 + 1 : pc + 1; //this will select the next program counter
   // if pc_sel is 1, just add one, and if pc_sel == 0 then use the datpath's output
   
   assign ram_r_addr = sel_addr ? pc : data_arr_reg;

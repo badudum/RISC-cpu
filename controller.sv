@@ -1,5 +1,6 @@
 module controller(input logic clk, input logic rst_n,
                   input logic [2:0] opcode, input logic [1:0] op,
+                  input logic Z, input logic N, input logic V,
                   
                   output logic [1:0] reg_sel, output logic [1:0] wb_sel, output logic w_en,
                   output logic en_A, output logic en_B, output logic en_C, output logic en_status,
@@ -38,6 +39,7 @@ module controller(input logic clk, input logic rst_n,
       load_pc <= 1'b0; load_ir <= 1'b1;
       pc_sel <= 1'b1; sel_addr <= 1'b0; load_addr <= 1'b0;
       ram_w_en <= 1'b0;
+      branch_sel <= 1'b0;
     end
     else begin
       case(state)    
@@ -48,6 +50,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b1;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `FETCH : begin
@@ -56,6 +59,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b1; load_ir <= 1'b1;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `LOAD : begin
@@ -64,6 +68,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
         
         // MOVE STATES 
@@ -74,6 +79,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
         // MOV, MVN
         `MOVEB : begin
@@ -82,6 +88,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `MOVEC : begin
@@ -90,6 +97,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
         
         `MOVERD : begin
@@ -98,6 +106,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
 
@@ -109,6 +118,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `STOREA : begin
@@ -117,6 +127,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         //ADD, AND
@@ -126,6 +137,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `STORERD : begin
@@ -134,6 +146,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         // CMP
@@ -143,6 +156,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
 
@@ -154,6 +168,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `LOAD_TO_C : begin
@@ -162,6 +177,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `LOAD_TO_RAM_REG : begin
@@ -170,6 +186,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           sel_addr <= 1'b1; load_addr <= 1'b1;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `LOAD_TO_RD : begin
@@ -178,6 +195,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           sel_addr <= 1'b0; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         //STR
@@ -199,6 +217,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `STORERN_TO_A :begin
@@ -208,6 +227,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `STORE_MEMADRR_C : begin
@@ -217,6 +237,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end 
         
         `STORE_C_TO_MEMREG : begin
@@ -226,6 +247,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b1; load_addr <= 1'b1;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
         
         `STORE_B_TO_C : begin
@@ -235,6 +257,7 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b0; load_addr <= 1'b0;
           ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
         end
 
         `STORE_B_TO_MEM : begin
@@ -244,11 +267,54 @@ module controller(input logic clk, input logic rst_n,
           load_pc <= 1'b0; load_ir <= 1'b0;
           pc_sel <= 1'b0; sel_addr <= 1'b0; load_addr <= 1'b0;
           ram_w_en <= 1'b1;
+          branch_sel <= 1'b0;
         end
 
 
         //BRANCH
+        
+        `BRANCH : begin
+          reg_sel <= 2'b11; wb_sel <= 2'b00;
+          w_en <= 1'b0; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0;
+          sel_A <= 1'b0; sel_B <= 1'b1;
+          load_pc <= 1'b0; load_ir <= 1'b0;
+          pc_sel <= 1'b1; sel_addr <= 1'b0; load_addr <= 1'b0;
+          ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
+        end
+        
 
+        //BRANCH LINK
+        `BRANCHLINK : begin
+          reg_sel <= 2'b10; wb_sel <= 2'b01;
+          w_en <= 1'b1; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0; 
+          sel_A <= 1'b0; sel_B <= 1'b1;
+          load_pc <= 1'b0; load_ir <= 1'b0;
+          pc_sel <= 1'b1; sel_addr <= 1'b0; load_addr <= 1'b0;
+          ram_w_en <= 1'b0;
+          branch_sel <= 1'b0;
+        end
+        
+        //RETURN
+        `RETURN : begin
+          reg_sel <= 2'b11; wb_sel <= 2'b00;
+          w_en <= 1'b0; en_A <= 1'b1; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0; 
+          sel_A <= 1'b0; sel_B <= 1'b1;
+          load_pc <= 1'b0; load_ir <= 1'b0;
+          pc_sel <= 1'b1; sel_addr <= 1'b0; load_addr <= 1'b0;
+          ram_w_en <= 1'b0;
+          branch_sel <= 1'b1;
+        end
+
+
+        //HALT
+        `HALT : begin
+          reg_sel <= 2'b11; wb_sel <= 2'b00; sel_A <= 1'b0; sel_B <= 1'b1;
+          w_en <= 1'b0; en_A <= 1'b0; en_B <= 1'b0; en_C <= 1'b0; en_status <= 1'b0;
+          load_pc <= 1'b0; load_ir <= 1'b0;
+          pc_sel <= 1'b1; sel_addr <= 1'b0; load_addr <= 1'b0;
+          ram_w_en <= 1'b0;
+        end
 
         
         default : begin
